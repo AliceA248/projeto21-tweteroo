@@ -1,37 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './entities/user.entity';
-import { Tweet } from './entities/tweet.entity';
 
 @Injectable()
 export class AppService {
-  private users: User[] = [];
-  private tweets: Tweet[] = [];
+  private readonly tweets = [];
+  private readonly users = [];
 
-  signUp(username: string, avatar: string): void {
-    const user = new User(username, avatar);
-    this.users.push(user);
+  signUpUser(username: string, avatar: string): void {
+    this.users.push({ username, avatar });
   }
 
-  postTweet(username: string, tweet: string): void {
-    const user = this.users.find(u => u.getUsername() === username);
-    if (user) {
-      const newTweet = new Tweet(user, tweet);
-      this.tweets.push(newTweet);
-    }
+  createTweet(username: string, tweet: string): void {
+    this.tweets.push({ username, tweet });
   }
 
-  getTweets(page: number): Tweet[] {
+  getTweets(page: number): any[] {
     const limit = 10;
-    const start = (page - 1) * limit;
-    const end = page * limit;
-    return this.tweets.slice(start, end);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    return this.tweets.slice(startIndex, endIndex);
   }
 
-  getUserTweets(username: string): Tweet[] {
-    const user = this.users.find(u => u.getUsername() === username);
-    if (user) {
-      return this.tweets.filter(tweet => tweet.getUser().getUsername() === username);
-    }
-    return [];
+  getTweetsByUsername(username: string): any[] {
+    return this.tweets.filter(tweet => tweet.username === username);
+  }
+
+  getUser(username: string): any {
+    return this.users.find(user => user.username === username);
   }
 }
