@@ -1,3 +1,4 @@
+// app.service.ts
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -12,6 +13,11 @@ export class AppService {
   createTweet(username: string, tweet: string): void {
     this.tweets.push({ username, tweet });
   }
+  getLatestTweets(limit: number): any[] {
+    const startIndex = Math.max(0, this.tweets.length - limit);
+    return this.tweets.slice(startIndex);
+  }
+
 
   getTweets(page: number): any[] {
     const limit = 10;
@@ -28,3 +34,5 @@ export class AppService {
     return this.users.find(user => user.username === username);
   }
 }
+
+
